@@ -1,71 +1,63 @@
 #include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-/*Desenvolva um programa em c que cadastre o nome, a altura, o peso, o cpf e sexo de algumas pessoas.
-Com os dados cadastrados, em seguida localizar uma pessoas através do seu CPF e imprimir o seu IMC.*/
-
-struct pessoas {
-	char nome[50];
-	float altura;
-	float peso;
-	int cpf;
-	char sexo;
-	float IMC;
-};
-
-void cadastrarPessoas(struct pessoas p[]) {
-	int i;
-	for (i = 0; i<1; i++) {
-		printf("\nPessoa Numero [%d]", i);
-		printf("\nDigite o Nome: ");
-		scanf("%s", &p[i].nome);
-		printf("\nDigite a Altura: ");
-		scanf("%f", &p[i].altura);
-		printf("\nDigite o Peso: ");
-		scanf("%f", &p[i].peso);
-		printf("\nDigite o CPF: ");
-		scanf("%d", &p[i].cpf);
-		printf("\nSexo: M - Masculino ~  F - Feminino: ");
-		scanf("%s", &p[i].sexo);
-		if (p[i].sexo == 'm' || p[i].sexo == 'M') {
-			p[i].sexo = "Homem";
-		}
-		else {
-			p[i].sexo = "Mulher";
-		}
-		system("clear");
-	}
-}
-
-void calcularIMC(struct pessoas p[]) {
-	int i;
-	for (i = 0; i<1; i++) {
-		printf("\nPessoa Numero: [%d]", i);
-		p[i].IMC = (p[i].peso / (p[i].altura * p[i].altura));
-
-		if (p[i].IMC < 26) {
-			printf("\nIndice de Massa Corporea: %f - \nEstado: Normal!\n", p[i].IMC);
-		}
-		else if (p[i].IMC >= 26 && p[i].IMC < 30) {
-			printf("\nIndice de Massa Corporea: %f - \nEstado: Obeso!\n", p[i].IMC);
-		}
-		else if (p[i].IMC >= 30 && p[i].IMC < 80) {
-			printf("\nIndice de Massa Corporea: %f - \nEstado: Obesidade Morbida!\n", p[i].IMC);
-		}
-		else {
-			printf("\nPeso Desconhecido!");
-			system("pause");
-		}
-	}
-}
+#include <locale.h>
 
 int main()
 {
-	struct pessoas pessoa[1];
-	cadastrarPessoas(pessoa);
-	printf("\nCalculando Indice de Massa Corporea ...\n");
-	calcularIMC(pessoa);
+	setlocale(LC_ALL, "Portuguese");
 
+	typedef struct {
+		char nome[30];
+		float altura;
+		float peso;
+		double cpf;
+		int sexo; // 1 masculino 0 feminino
+	} pessoa;
+
+	pessoa cad[100];
+	int op = 1, i = 0, j = 0;
+	float imc;
+	double bcpf;
+	while ((op > 0) && (i < 100))
+	{
+		printf("\nCadastrar Pessoa %i\n\n", i + 1);
+		printf("Nome: ");
+		getchar();
+		fgets(cad[i].nome, 30, stdin);
+
+		printf("Altura(cm): ");
+		scanf_s("%f", &cad[i].altura);
+
+		printf("Peso(kg): ");
+		scanf_s("%f", &cad[i].peso);
+
+		printf("CPF: ");
+		scanf_s("%lf", &cad[i].cpf);
+
+		printf("Sexo: ");
+		scanf_s("%i", &cad[i].sexo);
+		i++;
+		printf("Cadastrar outra pessoa? (1) sim (0) não: ");
+		getchar();
+		scanf_s("%i", &op);
+	}
+	system("cls");
+
+	printf("\n\nInforme o CPF para realizar a busca: ", i);
+	scanf_s("%lf", &bcpf);
+
+	for (j = 0; j < i; j++) {
+		if (bcpf == cad[j].cpf) {
+			printf("\nNome: %s", cad[j].nome);
+			printf("Altura: %.0f cm", cad[j].altura);
+			printf("\nPeso: %.0f kg\n", cad[j].peso);
+			imc = cad[j].peso / ((cad[j].altura / 100) * (cad[j].altura / 100));
+			printf("\nICM: %.2f\n\n", imc);
+
+		}
+	}
+
+	system("pause");
 	return 0;
 }
